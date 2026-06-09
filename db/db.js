@@ -20,4 +20,13 @@ const pool = new Pool({
   }
 });
 
+// Add this test connection check to log explicitly in Railway logs
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('❌ Neon Database connection failed on startup:', err.message);
+  } else {
+    console.log('✅ Neon Database connected successfully at:', res.rows[0].now);
+  }
+});
+
 module.exports = pool;
