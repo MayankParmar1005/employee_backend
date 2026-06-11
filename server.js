@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./db/db');
-console.log("=== DB.JS WAS IMPORTED SUCCESSFULLY ==="); // 👈 ADD THIS
 
 const app = express();
 
@@ -10,12 +9,11 @@ const app = express();
 app.use(cors());                  // Allows cross-origin requests from Angular
 app.use(express.json());
 
-console.log("=== SERVER IS STARTING UP ==="); // 👈 ADD THIS
-
-const employeeRoutes =
-require('./routes/employee.routes');
+const employeeRoutes = require('./routes/employee.routes');
+const authRoutes = require('./routes/auth.routes');
 
 app.use('/api/employees', employeeRoutes);
+app.use('/api/auth', authRoutes);
 
 // const PORT = 3000;
 const PORT = process.env.PORT || 3000;

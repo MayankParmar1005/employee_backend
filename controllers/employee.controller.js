@@ -6,6 +6,8 @@ const pool = require('../db/db');
 //   res.json(employees);
 // };
 
+
+// api for get all employee list
 exports.getEmployees = async (req, res) => {
 
   try {
@@ -24,7 +26,7 @@ exports.getEmployees = async (req, res) => {
 
 };
 
-// GET BY ID
+// GET employee by id
 exports.getEmployeeById = async(req, res) => {
   const id = parseInt(req.params.id);
 
@@ -51,7 +53,7 @@ exports.getEmployeeById = async(req, res) => {
   }
 };
 
-
+// api for create new employee
 exports.createEmployee = async (req, res) => {
 
   try {
@@ -79,7 +81,7 @@ exports.createEmployee = async (req, res) => {
 
 };
 
-// UPDATE
+// api for edit employee
 
 exports.updateEmployee = async (req, res) => {
 
@@ -122,7 +124,7 @@ exports.updateEmployee = async (req, res) => {
 
 };
 
-// DELETE
+// api for delete employee
 
 exports.deleteEmployee = async (req, res) => {
 
