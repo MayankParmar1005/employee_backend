@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db/db');
 
+// const cron_job = require('./scheduler/reminder'); // this is for run cron job
+
 const app = express();
 
 // Middleware
