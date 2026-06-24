@@ -12,7 +12,7 @@ exports.getEmployees = async (req, res) => {
 
   try {
 
-    const result = await pool.query( 'SELECT * FROM employees ORDER BY id');
+    const result = await pool.query( 'SELECT * FROM staff ORDER BY id');
 
     res.json(result.rows);
 
@@ -32,7 +32,7 @@ exports.getEmployeeById = async(req, res) => {
 
   try {
 
-    const result = await pool.query( 'SELECT * FROM employees WHERE id = ' + id);
+    const result = await pool.query( 'SELECT * FROM staff WHERE id = ' + id);
 
     if (result.rows.length === 0) {
 
@@ -53,20 +53,23 @@ exports.getEmployeeById = async(req, res) => {
   }
 };
 
-// api for create new employee
-exports.createEmployee = async (req, res) => {
+// api for create new staff member
+exports.createStaff = async (req, res) => {
 
   try {
 
-    const { name, designation, age, email, gender, hobbies, languages } = req.body;
+    // 1. Destructure the fields exactly as they come from your frontend/JSON payload
+    const { name, email, phone, role, specialization, joinDate, status, rating } = req.body;
 
+    // 2. Insert into the 'staff' table using the correct snake_case column names
     const result = await pool.query(
-        `INSERT INTO employees(name, designation, age, email, gender, hobbies, languages)
-         VALUES($1,$2,$3,$4,$5,$6,$7)
+        `INSERT INTO staff(name, email, phone, role, specialization, join_date, status, rating)
+         VALUES($1, $2, $3, $4, $5, $6, $7, $8)
          RETURNING *`,
-        [name, designation, age, email, gender, hobbies, languages]
+        [name, email, phone, role, specialization, joinDate, status, rating]
     );
 
+    // 3. Return the newly created staff record
     res.status(201).json(result.rows[0]);
 
   } catch(error) {
@@ -81,35 +84,40 @@ exports.createEmployee = async (req, res) => {
 
 };
 
-// api for edit employee
-
-exports.updateEmployee = async (req, res) => {
+// api for edit staff member
+exports.updateStaff = async (req, res) => {
 
   try {
 
     const id = req.params.id;
-    const { name, designation, age , email, gender, hobbies, languages } = req.body;
+    
+    // 1. Destructure the new salon staff fields from the request body
+    const { name, email, phone, role, specialization, join_date, status, rating } = req.body;
 
+    // 2. Update the 'staff' table using the correct snake_case column names
     const result = await pool.query(
-      `UPDATE employees
+      `UPDATE staff
        SET name = $1,
-           designation = $2,
-           age = $3,
-           email = $4,
-           gender = $5,
-           hobbies = $6,
-           languages = $7
-       WHERE id = $8
+           email = $2,
+           phone = $3,
+           role = $4,
+           specialization = $5,
+           join_date = $6,
+           status = $7,
+           rating = $8
+       WHERE id = $9
        RETURNING *`,
-      [name, designation, age, email, gender, hobbies, languages, id]
+      [name, email, phone, role, specialization, join_date, status, rating, id]
     );
 
+    // 3. Check if the staff member exists
     if (result.rows.length === 0) {
       return res.status(404).json({
-        message: 'Employee not found'
+        message: 'Staff member not found'
       });
     }
 
+    // 4. Return the updated staff record
     res.json(result.rows[0]);
 
   } catch (error) {
@@ -132,7 +140,7 @@ exports.deleteEmployee = async (req, res) => {
 
     const id = req.params.id;
 
-    await pool.query('DELETE FROM employees WHERE id=$1',[id]);
+    await pool.query('DELETE FROM staff WHERE id=$1',[id]);
 
     res.json({
       message: 'Deleted successfully'

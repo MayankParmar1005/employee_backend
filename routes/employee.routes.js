@@ -31,9 +31,9 @@ router.get('/test-whatsapp', async(req, res) => {
 
 router.get('/:id', employeeController.getEmployeeById);
 
-router.post('/', employeeController.createEmployee);
+router.post('/', employeeController.createStaff);
 
-router.put('/:id', employeeController.updateEmployee);
+router.put('/:id', employeeController.updateStaff);
 
 router.delete('/:id', employeeController.deleteEmployee);
 

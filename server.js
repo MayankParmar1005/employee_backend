@@ -13,9 +13,11 @@ app.use(express.json());
 
 const employeeRoutes = require('./routes/employee.routes');
 const authRoutes = require('./routes/auth.routes');
+const appointmentRoutes = require('./routes/appointment.route');
 
 app.use('/api/employees', employeeRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 // const PORT = 3000;
 const PORT = process.env.PORT || 3000;

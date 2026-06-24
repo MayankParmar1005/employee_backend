@@ -26,7 +26,10 @@ cron.schedule('* * * * *', async() => {
 
     await sendWhatsAppMessage(
         '919898948827',
-        'Hello Mayank, WhatsApp integration working successfully.'
+        'Mayank',
+        'Glamour Salon',
+        '16 June 2026',
+        '5:00 PM'
     );
 
     // res.send('Message Sent');

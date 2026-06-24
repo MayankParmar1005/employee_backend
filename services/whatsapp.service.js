@@ -1,9 +1,10 @@
 const axios = require('axios');
 
-const ACCESS_TOKEN = 'EAAXMZBDZBYZBDIBRgLZCC8VnCZCV9REJKCgsW1XU04HL0oMxZBygNBzLl9B4z0WnxHQuI7A5mIKotFHAoVjrPMIBmm5wC525ppDybvt19H8IdTDXrkG7YcEQx0xo1qkWVjwt3wFSqZAt6NDJR56qP1lfl099G5qZA5l22yLGZAvZBa9wnJ9c4etZCgEHHa3Geyq9pFYfmT2XZCZAbjZAHUKP16ZAJvj0pQR0be13KaSDBct3ZCn2s2HxkdrIcsklbZBW7ZCOSOKGQYm4ikN6kXTjeHgNl5ZBKtw';
+const ACCESS_TOKEN = 'EAAXMZBDZBYZBDIBRlOrncJBbGLygJLyWcUUpI6ibTdj4MV9hVayqs2n4FsBkVtZA7Sfs7VzxO67isQWeTPlygDeN1RpQUMFkK3Q7Ep8kj0I4FHdR4cLgRrDMlddVmkPXcixgsmXnpHToTrdFaUTFIxP7BGHaUmehi4TRIKe7F2sbC7HP7UNF8ZA0WbvY4Oyf0mNZA3pfjYSc3DUVFZCjxN8NjZBwY6uDwqq6Llqpr4lDyQQEGYOMioZCEZA0lZCJ6kddVgaKJ1bgYSMuFZB3tdkQfpad';
 const PHONE_NUMBER_ID = '1051419974712862';
 
-async function sendWhatsAppMessage(to, message) {
+// async function sendWhatsAppMessage(to, message) {
+async function sendWhatsAppMessage(to, customerName, store_name, bookingDate, bookingTime) {
 
   try {
 
@@ -19,10 +20,35 @@ async function sendWhatsAppMessage(to, message) {
 
         type: 'template',
         template: {
-          name: 'hello_world', // Meta's default test template
+          name: 'booking_reminder', // Meta's default test template
           language: {
-            code: 'en_US'
-          }
+            code: 'en'
+          },
+          // msg parameter
+          components: [
+            {
+              type: 'body',
+              parameters: [
+                {
+                  type: 'text',
+                  text: customerName
+                },
+                {
+                  type: 'text',
+                  text: store_name
+                },
+                {
+                  type: 'text',
+                  text: bookingDate
+                },
+                {
+                  type: 'text',
+                  text: bookingTime
+                }
+              ]
+            }
+          ]
+          // msg parameter
         }
       },
       {
