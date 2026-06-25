@@ -97,6 +97,7 @@ exports.updateCustomer = async (req, res) => {
   }
 };
 
+
 // 5. DELETE CUSTOMER (WITH EXPLICIT APPOINTMENT CHECK)
 exports.deleteCustomer = async (req, res) => {
   try {
