@@ -74,7 +74,7 @@ exports.createAppointment = async (req, res) => {
   };
 
 
-
+  // Get appointment list
   exports.getAppointments = async (req, res) => {
 
     try {

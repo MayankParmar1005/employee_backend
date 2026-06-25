@@ -40,7 +40,7 @@ exports.register = async (req, res) => {
 
     if (!user) {
       return res.status(401).json({
-        message: 'Invalid Email'
+        message: 'Invalid email or password'
       });
     }
 
@@ -51,7 +51,7 @@ exports.register = async (req, res) => {
 
     if (!match) {
       return res.status(401).json({
-        message: 'Invalid Password'
+        message: 'Invalid email or password'
       });
     }
 

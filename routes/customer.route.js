@@ -12,6 +12,9 @@ router.post('/', customerController.createCustomer);        // Add
 router.put('/:id', customerController.updateCustomer);      // Edit
 router.delete('/:id', customerController.deleteCustomer);   // Delete
 
+// Place this route alongside your other GET routes
+router.get('/:id/appointments', customerController.getCustomerAppointmentHistory);
+
 
 
 module.exports = router;

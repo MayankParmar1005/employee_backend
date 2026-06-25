@@ -164,3 +164,36 @@ exports.checkAvailability = async (req, res) => {
       res.status(500).json({ message: 'Server Error' });
     }
   };
+
+  // api to get detailed appointment history for a specific customer popup
+  exports.getCustomerAppointmentHistory = async (req, res) => {
+    try {
+      const customerId = parseInt(req.params.id);
+
+      // Fetch the specific columns needed for the frontend popup table
+      const result = await pool.query(
+        `
+        SELECT 
+            a.id,
+            s.name AS staff_name,          -- Pulls staff name from staff table
+            a.service_name,
+            a.appointment_date,
+            a.appointment_time,
+            a.total_amount::FLOAT AS price, -- Casted to float for direct Angular number mapping
+            a.status
+        FROM appointments a
+        LEFT JOIN staff s ON a.staff_id = s.id
+        WHERE a.customer_id = $1
+        ORDER BY a.appointment_date DESC, a.appointment_time DESC
+        `,
+        [customerId]
+      );
+
+      // Even if the list is empty, return a 200 with an empty array []
+      res.json(result.rows);
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  };
