@@ -1,8 +1,11 @@
-// const { Pool } = require('pg');
+// for local use below code
+// const { Pool, types } = require('pg');
+
+// types.setTypeParser(1082,(value)=>value);
 
 // const pool = new Pool({
 //   user: 'postgres',
-//   host: '192.168.0.166',
+//   host: '192.168.1.13',
 //   database: 'Employee',
 //   password: 'shree',
 //   port: 5432
@@ -10,7 +13,10 @@
 
 // module.exports = pool;
 
-const { Pool } = require('pg');
+// for live api use below code
+const { Pool, types } = require('pg');
+
+types.setTypeParser(1082,(value)=>value);
 
 // Railway automatically provides process.env.DATABASE_URL if you added it to the Variables tab
 const pool = new Pool({
