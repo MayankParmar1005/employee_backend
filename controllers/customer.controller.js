@@ -176,13 +176,15 @@ exports.checkAvailability = async (req, res) => {
         SELECT 
             a.id,
             s.name AS staff_name,          -- Pulls staff name from staff table
-            a.service_name,
+            a.service_id,
+            srv.name AS service_name,
             a.appointment_date,
             a.appointment_time,
             a.total_amount::FLOAT AS price, -- Casted to float for direct Angular number mapping
             a.status
         FROM appointments a
         LEFT JOIN staff s ON a.staff_id = s.id
+        LEFT JOIN services srv ON a.service_id = srv.id -- New join link
         WHERE a.customer_id = $1
         ORDER BY a.appointment_date DESC, a.appointment_time DESC
         `,

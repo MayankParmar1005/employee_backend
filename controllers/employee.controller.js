@@ -59,14 +59,14 @@ exports.createStaff = async (req, res) => {
   try {
 
     // 1. Destructure the fields exactly as they come from your frontend/JSON payload
-    const { name, email, phone, role, specialization, joinDate, status, rating } = req.body;
+    const { name, email, phone, role, specialization, join_date, status, rating } = req.body;
 
     // 2. Insert into the 'staff' table using the correct snake_case column names
     const result = await pool.query(
         `INSERT INTO staff(name, email, phone, role, specialization, join_date, status, rating)
          VALUES($1, $2, $3, $4, $5, $6, $7, $8)
          RETURNING *`,
-        [name, email, phone, role, specialization, joinDate, status, rating]
+        [name, email, phone, role, specialization, join_date, status, rating]
     );
 
     // 3. Return the newly created staff record
