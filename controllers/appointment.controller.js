@@ -10,7 +10,7 @@ exports.createAppointment = async (req, res) => {
         mobile, 
         email, 
         staff_id, 
-        service_name, 
+        service_id, // Swapped from service_name to relational id 
         appointment_date, 
         appointment_time, 
         total_amount 
@@ -46,14 +46,14 @@ exports.createAppointment = async (req, res) => {
         `INSERT INTO appointments (
             customer_id, 
             staff_id, 
-            service_name, 
             appointment_date, 
             appointment_time, 
-            total_amount
+            total_amount,
+            service_id 
          )
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING *`,
-        [customerId, staff_id, service_name, appointment_date, appointment_time, total_amount]
+        [customerId, staff_id, appointment_date, appointment_time, total_amount, service_id]
       );
   
       // Commit Transaction if everything succeeds
@@ -88,7 +88,8 @@ exports.createAppointment = async (req, res) => {
                 c.mobile AS customer_mobile,   -- Pulls mobile from customer table
                 a.staff_id,
                 s.name AS staff_name,          -- Pulls name from staff table
-                a.service_name,
+                a.service_id,
+                srv.name AS service_name,
                 a.appointment_date,
                 a.appointment_time,
                 a.status,
@@ -97,6 +98,7 @@ exports.createAppointment = async (req, res) => {
             FROM appointments a
             INNER JOIN customers c ON a.customer_id = c.id
             LEFT JOIN staff s ON a.staff_id = s.id
+            LEFT JOIN services srv ON a.service_id = srv.id -- New join link
             ORDER BY a.appointment_date DESC, a.appointment_time DESC
             `
         );
@@ -131,7 +133,8 @@ exports.getAppointmentById = async (req, res) => {
           c.email AS customer_email,
           a.staff_id,
           s.name AS staff_name,
-          a.service_name,
+          a.service_id,                    -- Returns the relational ID
+          srv.name AS service_name,        -- Dynamically pulls the text name for your frontend view
           a.appointment_date,
           a.appointment_time,
           a.status,
@@ -140,6 +143,7 @@ exports.getAppointmentById = async (req, res) => {
       FROM appointments a
       INNER JOIN customers c ON a.customer_id = c.id
       LEFT JOIN staff s ON a.staff_id = s.id
+      LEFT JOIN services srv ON a.service_id = srv.id -- Linked our new services table
       WHERE a.id = $1
       `,
       [id]
@@ -167,7 +171,7 @@ exports.updateAppointment = async (req, res) => {
     // 1. Destructure ONLY the scheduling, service, and status fields
     const { 
       staff_id, 
-      service_name, 
+      service_id, // Swapped from service_name to relational id
       appointment_date, 
       appointment_time, 
       status, 
@@ -178,14 +182,14 @@ exports.updateAppointment = async (req, res) => {
     const result = await pool.query(
       `UPDATE appointments 
        SET staff_id = $1, 
-           service_name = $2, 
+           service_id = $2, 
            appointment_date = $3, 
            appointment_time = $4, 
            status = $5,
            total_amount = $6
        WHERE id = $7
        RETURNING *`,
-      [staff_id, service_name, appointment_date, appointment_time, status, total_amount, id]
+      [staff_id, parseInt(service_id), appointment_date, appointment_time, status, total_amount, id]
     );
 
     // 3. Check if the appointment record exists
