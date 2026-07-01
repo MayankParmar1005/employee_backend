@@ -1,5 +1,38 @@
 const pool = require('../db/db');
 
+// API to fetch booked time slots for a specific date
+exports.getBookedSlots = async (req, res) => {
+  try {
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ message: 'Date parameter is required.' });
+    }
+
+    // Fetch times where status is NOT 'cancelled'
+    const result = await pool.query(
+      `SELECT appointment_time 
+       FROM appointments 
+       WHERE appointment_date = $1 AND status != 'cancelled'
+       ORDER BY appointment_time ASC`,
+      [date]
+    );
+
+    // Format the output to a clean string array: ["10:00:00", "14:30:00"]
+    const bookedSlots = result.rows.map(row => row.appointment_time);
+
+    res.json({
+      date: date,
+      bookedSlots: bookedSlots
+    });
+
+  } catch (error) {
+    console.error('Error fetching booked slots:', error);
+    res.status(500).json({ message: 'Server Error fetching time slots' });
+  }
+};
+
+// Create new appointment
 exports.createAppointment = async (req, res) => {
     // Use a client from the pool to handle multi-query transactions safely
     const client = await pool.connect();
