@@ -1,7 +1,34 @@
 const express = require('express');
 const router = express.Router();
 
+// for image upload
+const multer = require('multer');
+const path = require('path');
+
 const employeeController = require('../controllers/employee.controller');
+
+// 1. Configure where to save files and how to name them uniquely
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Make sure you create an empty 'uploads' folder in your backend project root!
+    },
+    filename: (req, file, cb) => {
+      // Generates: employee-1719771234567.jpg
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+// 2. Set file filters to ensure only images are accepted
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 const {
   sendWhatsAppMessage
@@ -31,9 +58,9 @@ router.get('/test-whatsapp', async(req, res) => {
 
 router.get('/:id', employeeController.getEmployeeById);
 
-router.post('/', employeeController.createStaff);
+router.post('/', upload.single('employee_image'), employeeController.createStaff);
 
-router.put('/:id', employeeController.updateStaff);
+router.put('/:id', upload.single('employee_image'), employeeController.updateStaff);
 
 router.delete('/:id', employeeController.deleteEmployee);
 

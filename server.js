@@ -25,6 +25,8 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/service', serviceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
+app.use('/uploads', express.static('uploads'));
+
 // const PORT = 3000;
 const PORT = process.env.PORT || 3000;
 
